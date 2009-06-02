@@ -14,9 +14,9 @@ module WeeklyHelper
   def weekly_links(options)
     start_date = options[:start_date]
     end_date = options[:end_date]
-    concat("<a href='/weekly?start_date=#{start_date - 7}?user_id='>« Previous Week</a> ")
+    concat("<a href='?start_date=#{start_date - 7}?user_id='>« Previous Week</a> ")
     concat("#{start_date.strftime("%B %d -")} #{end_date.strftime("%B %d")} #{start_date.year}")
-    concat(" <a href='/weekly?start_date=#{start_date + 7}?user_id='>Next Week »</a>")
+    concat(" <a href='?start_date=#{start_date + 7}?user_id='>Next Week »</a>")
   end
   
   class WeeklyBuilder
