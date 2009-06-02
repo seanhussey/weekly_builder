@@ -27,20 +27,9 @@ module WeeklyHelper
       @objects, @template, @options = objects, template, options
     end
 
-    def days(options = {})
-      concat(tag("div", :id => "days"))
-        concat(content_tag("div", options[:title], :id => "placeholder"))
-        for day in @options[:start_date]..@options[:end_date]
-          concat(tag("div", :id => "day"))
-          concat(content_tag("b", day.strftime('%A')))
-          concat(tag("br"))
-          concat(day.strftime('%B %d'))
-          concat("</div>")
-        end
-      concat("</div>")      
-    end
-    
     def week(options = {})
+      days
+      
       if options[:business_hours] == "true" or options[:business_hours].blank?
         hours = ["6am","7am","8am","9am","10am","11am","12pm","1pm","2pm","3pm","4pm","5pm","6pm","7pm","8pm"]
         header_row = "header_row"
@@ -81,6 +70,18 @@ module WeeklyHelper
       concat("</div>")
     end
   
+    def days
+      concat(tag("div", :id => "days"))
+        concat(content_tag("div", "Weekly View", :id => "placeholder"))
+        for day in @options[:start_date]..@options[:end_date]
+          concat(tag("div", :id => "day"))
+          concat(content_tag("b", day.strftime('%A')))
+          concat(tag("br"))
+          concat(day.strftime('%B %d'))
+          concat("</div>")
+        end
+      concat("</div>")      
+    end
     
     private
     
