@@ -46,11 +46,15 @@ module WeeklyHelper
         header_row = "header_row"
         day_row = "day_row"
         grid = "grid"
+        start_hour = 6
+        end_hour = 20
       else
         hours = ["1am","2am","3am","4am","5am","6am","7am","8am","9am","10am","11am","12pm","1pm","2pm","3pm","4pm","5pm","6pm","7pm","8pm","9pm","10pm","11pm","12am"]
         header_row = "full_header_row"
         day_row = "full_day_row"
         grid = "full_grid"
+        start_hour = 1
+        end_hour = 24
       end
       
       concat(tag("div", :id => "hours"))
@@ -65,7 +69,7 @@ module WeeklyHelper
           for day in @options[:start_date]..@options[:end_date]
             concat(tag("div", :id => day_row))
             for event in @objects
-              if event.starts_at.strftime('%A') == day.strftime('%A') and event.starts_at.strftime('%H').to_i >= 6 and event.ends_at.strftime('%H').to_i <= 24 
+              if event.starts_at.strftime('%A') == day.strftime('%A') and event.starts_at.strftime('%H').to_i >= start_hour and event.ends_at.strftime('%H').to_i <= end_hour
                 concat(tag("div", :id => "week_event", :style =>"left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.hours,event.minutes)}px;", :onclick => "location.href='/events/#{event.id}';"))
                   yield(event)
                 concat("</div>")
