@@ -17,6 +17,8 @@ Install
 
 script/install git://github.com/dmix/weekly_builder.git 
 
+Then copy images/stylesheets to public folder
+
 How to Use WeeklyBuilder
 =======
 

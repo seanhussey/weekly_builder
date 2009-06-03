@@ -4,7 +4,7 @@ module WeeklyHelper
   def weekly_calendar(objects, *args)
     options = args.last.is_a?(Hash) ? args.pop : {}
     date = options[:date]
-    start_date = Date.new(date.year, date.month, date.day) 
+    start_date = Date.new(date.year, date.month, date.day)
     end_date = Date.new(date.year, date.month, date.day) + 6
     concat(tag("div", :id => "week"))
     yield WeeklyBuilder.new(objects || [], self, options, start_date, end_date)
@@ -17,7 +17,7 @@ module WeeklyHelper
   def weekly_links(options)
     date = options[:date]
     start_date = Date.new(date.year, date.month, date.day) 
-    end_date = Date.new(date.year, date.month, date.day) + 6
+    end_date = Date.new(date.year, date.month, date.day) + 7
     concat("<a href='?start_date=#{start_date - 7}?user_id='>« Previous Week</a> ")
     concat("#{start_date.strftime("%B %d -")} #{end_date.strftime("%B %d")} #{start_date.year}")
     concat(" <a href='?start_date=#{start_date + 7}?user_id='>Next Week »</a>")
@@ -58,13 +58,15 @@ module WeeklyHelper
         concat("</div>")
         
         concat(tag("div", :id => grid))
-          for day in @start_date..@end_date
+          for day in @start_date..@end_date 
             concat(tag("div", :id => day_row))
             for event in @objects
-              if event.starts_at.strftime('%A') == day.strftime('%A') and event.starts_at.strftime('%H').to_i >= start_hour and event.ends_at.strftime('%H').to_i <= end_hour
-                concat(tag("div", :id => "week_event", :style =>"left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;", :onclick => "location.href='/events/#{event.id}';"))
-                  yield(event)
-                concat("</div>")
+              if event.starts_at.strftime('%j').to_s == day.strftime('%j').to_s 
+               if event.starts_at.strftime('%H').to_i >= start_hour and event.ends_at.strftime('%H').to_i <= end_hour
+                  concat(tag("div", :id => "week_event", :style =>"left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;", :onclick => "location.href='/events/#{event.id}';"))
+                    yield(event)
+                  concat("</div>")
+                end
               end
             end
             concat("</div>")
@@ -76,7 +78,7 @@ module WeeklyHelper
     def days      
       concat(tag("div", :id => "days"))
         concat(content_tag("div", "Weekly View", :id => "placeholder"))
-        for day in @start_date..@end_date
+        for day in @start_date..@end_date        
           concat(tag("div", :id => "day"))
           concat(content_tag("b", day.strftime('%A')))
           concat(tag("br"))
