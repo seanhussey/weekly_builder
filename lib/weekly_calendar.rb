@@ -91,22 +91,25 @@ module WeeklyHelper
 
     def left(starts_at,business_hours)
       if business_hours == "true" or business_hours.blank?
-        hour = starts_at.strftime('%H').to_i - 6
+        minutes = starts_at.strftime('%M').to_f * 1.25
+        hour = starts_at.strftime('%H').to_f - 6
       else
-        hour = starts_at.strftime('%H').to_i
+        minutes = starts_at.strftime('%M').to_f * 1.25
+        hour = starts_at.strftime('%H').to_f
       end
-      position = hour * 75
+      position = (hour * 75) + minutes
     end
 
     def width(starts_at,ends_at)
-      start_hours = starts_at.strftime('%H') * 60
-      start_minutes = starts_at.strftime('%M') + start_hours
-      end_hours = ends_at.strftime('%H') * 60
-      end_minutes = ends_at.strftime('%M') + end_hours
-      difference =  end_minutes.to_i - start_minutes.to_i
+      #example 3:30 - 5:30
+      start_hours = starts_at.strftime('%H').to_i * 60 # 3 * 60 = 180
+      start_minutes = starts_at.strftime('%M').to_i + start_hours # 30 + 180 = 210
+      end_hours = ends_at.strftime('%H').to_i * 60 # 5 * 60 = 300
+      end_minutes = ends_at.strftime('%M').to_i + end_hours # 30 + 300 = 330
+      difference =  (end_minutes.to_i - start_minutes.to_i) * 1.25 # (330 - 180) = 150 * 1.25 = 187.5
       
       unless difference < 60
-        width = (difference * 1.25) - 12
+        width = difference - 12
       else
         width = 63
       end
