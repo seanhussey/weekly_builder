@@ -24,9 +24,9 @@ How to Use WeeklyBuilder
 
 The calendar builder:
     <%  weekly_calendar(@events, :date => @date, :include_24_hours => true) do |w|  %>
-      <%  w.week(:business_hours => params[:business_hours]) do |event|  %>
+      <%  w.week(:business_hours => params[:business_hours]) do |event,truncate|  %>
         <%=  event.starts_at.strftime('%I:%M%p')  %>
-        <%=  link_to truncate(event.name,35), event_path(event)  %>
+        <%=  link_to truncate(event.name,truncate), event_path(event)  %>
       <% end -%>
     <% end -%>
 
@@ -39,6 +39,8 @@ In your controller:
     @events = Event.find(:all, :conditions => ['starts_at between ? and ?', @start_date, @start_date + 7])
   
 The event model only requires 2 attributes: starts_at:datetime and ends_at:datetime to calculate width and position on the calendar. In my demo app I ask the user for one date/time (starts_at) and estimated time to complete (for example 2hrs), it then calculates ends_at after it is submitted.
+
+UPDATE: Added a truncate_width method so that long event names are truncated in proportion to the width of the event, this is passed through the week block with |truncate|.
 
 ### Options available:
 
