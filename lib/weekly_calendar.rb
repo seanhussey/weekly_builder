@@ -3,14 +3,14 @@ module WeeklyHelper
   
   def weekly_calendar(objects, *args)
     options = args.last.is_a?(Hash) ? args.pop : {}
-    date = options[:date]
+    date = options[:date] || Time.now
     start_date = Date.new(date.year, date.month, date.day)
     end_date = Date.new(date.year, date.month, date.day) + 6
     concat(tag("div", :id => "week"))
     yield WeeklyBuilder.new(objects || [], self, options, start_date, end_date)
     concat("</div>")
     if options[:include_24_hours] == true
-      concat("<b><a href='?business_hours=true'>Business Hours</a> | <a href='?business_hours=false'>24-Hours</a></b>")
+      concat("<b><a href='?business_hours=true&start_date=#{start_date}'>Business Hours</a> | <a href='?business_hours=false&start_date=#{start_date}'>24-Hours</a></b>")
     end
   end
   
@@ -103,7 +103,7 @@ module WeeklyHelper
         minutes = starts_at.strftime('%M').to_f * 1.25
         hour = starts_at.strftime('%H').to_f
       end
-      position = (hour * 75) + minutes
+      left = (hour * 75) + minutes
     end
 
     def width(starts_at,ends_at)
