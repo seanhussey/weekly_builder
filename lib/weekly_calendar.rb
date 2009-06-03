@@ -64,7 +64,8 @@ module WeeklyHelper
               if event.starts_at.strftime('%j').to_s == day.strftime('%j').to_s 
                if event.starts_at.strftime('%H').to_i >= start_hour and event.ends_at.strftime('%H').to_i <= end_hour
                   concat(tag("div", :id => "week_event", :style =>"left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;", :onclick => "location.href='/events/#{event.id}';"))
-                    yield(event)
+                    truncate = truncate_width(width(event.starts_at,event.ends_at))
+                    yield(event,truncate)
                   concat("</div>")
                 end
               end
@@ -120,5 +121,9 @@ module WeeklyHelper
       end
     end
     
+    def truncate_width(width)
+      hours = width / 63
+      truncate_width = 20 * hours
+    end
   end
 end
