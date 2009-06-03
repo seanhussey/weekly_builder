@@ -1,7 +1,7 @@
 WeeklyBuilder
 ==============
 
-A weekly calendar builder for ruby on rails. There are countless monthly calendar rails plugins available but I couldn't find any with a weekly view, so I built my own.
+A weekly calendar builder for ruby on rails. Although there are countless monthly calendars on Github I couldn't find any with a weekly view, so I built my own.
 
 The calendar is horizontally scrolling with a completely fluid CSS layout and an option for business/24 hours. Weekly views are useful because the events are plotted based on time and the width is determined by how long the event is scheduled for. So there is a visual representation of when the event is, not just a list.
 
@@ -44,10 +44,13 @@ The event model only requires 2 attributes: starts_at:datetime and ends_at:datet
 * `:include_24_hours`:
   Default hours are 6am-8pm, if this set as "true" then an option to switch to a 24-hour schedule appears at the bottom
 
-Copyright (c) 2009 Dan McGrady, released under the MIT license
+Copyright (c) 2009 Dan McGrady http://dmix.ca, released under the MIT license
+
+Thanks to P8 http://github.com/p8/table_builder/
 
 TODO
 =======
+* IE6 Friendly (so far only tested on FF3 + Safari 4)
 * Testing
 * Refactor concats to be nested
 * Single @date instead of @start_date + @end_date
