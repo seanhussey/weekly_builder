@@ -59,7 +59,7 @@ module WeeklyHelper
             concat(tag("div", :id => day_row))
             for event in @objects
               if event.starts_at.strftime('%A') == day.strftime('%A') and event.starts_at.strftime('%H').to_i >= start_hour and event.ends_at.strftime('%H').to_i <= end_hour
-                concat(tag("div", :id => "week_event", :style =>"left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.hours,event.minutes)}px;", :onclick => "location.href='/events/#{event.id}';"))
+                concat(tag("div", :id => "week_event", :style =>"left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;", :onclick => "location.href='/events/#{event.id}';"))
                   yield(event)
                 concat("</div>")
               end
@@ -98,10 +98,15 @@ module WeeklyHelper
       position = hour * 75
     end
 
-    def width(hours,minutes)
-      min = (hours * 60) + minutes
-      unless min < 60
-        width = (min * 1.25) - 12
+    def width(starts_at,ends_at)
+      start_hours = starts_at.strftime('%H') * 60
+      start_minutes = starts_at.strftime('%M') + start_hours
+      end_hours = ends_at.strftime('%H') * 60
+      end_minutes = ends_at.strftime('%M') + end_hours
+      difference =  end_minutes.to_i - start_minutes.to_i
+      
+      unless difference < 60
+        width = (difference * 1.25) - 12
       else
         width = 63
       end
