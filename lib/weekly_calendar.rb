@@ -86,7 +86,7 @@ module WeeklyHelper
     private
     
     def concat(tag)
-       @template.concat(tag)
+      @template.concat(tag)
     end
 
     def left(starts_at,business_hours)
@@ -111,7 +111,7 @@ module WeeklyHelper
       unless difference < 60
         width = difference - 12
       else
-        width = 63
+        width = 63 #default width (75px minus padding+border)
       end
     end
     
