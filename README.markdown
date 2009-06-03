@@ -21,7 +21,7 @@ How to Use WeeklyBuilder
 =======
 
 The calendar builder:
-    <%  weekly_calendar(@events, :start_date => @start_date, :end_date => @end_date, :include_24_hours => true) do |w|  %>
+    <%  weekly_calendar(@events, :date => @date, :include_24_hours => true) do |w|  %>
       <%  w.week(:business_hours => params[:business_hours]) do |event|  %>
         <%=  event.starts_at.strftime('%I:%M%p')  %>
         <%=  link_to truncate(event.name,35), event_path(event)  %>
@@ -29,13 +29,12 @@ The calendar builder:
     <% end -%>
 
 The Next/Previous week links helper:
-    <%  weekly_links(:start_date => @start_date, :end_date => @end_date)  %>
+    <%  weekly_links(:date => @date)  %>
 
 In your controller:
     @date = Time.parse("#{params[:start_date]} || Time.now.utc")
     @start_date = Date.new(@date.year, @date.month, @date.day) 
-    @end_date = Date.new(@date.year, @date.month, @date.day) + 6
-    @events = Event.find(:all, :conditions => ['starts_at between ? and ?', @start_date, @end_date])
+    @events = Event.find(:all, :conditions => ['starts_at between ? and ?', @start_date, @start_date + 7])
   
 The event model only requires 2 attributes: starts_at:datetime and ends_at:datetime to calculate width and position on the calendar. In my demo app I ask the user for one date/time (starts_at) and estimated time to complete (for example 2hrs), it then calculates ends_at after it is submitted.
 

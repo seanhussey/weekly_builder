@@ -3,8 +3,11 @@ module WeeklyHelper
   
   def weekly_calendar(objects, *args)
     options = args.last.is_a?(Hash) ? args.pop : {}
+    date = options[:date]
+    start_date = Date.new(date.year, date.month, date.day) 
+    end_date = Date.new(date.year, date.month, date.day) + 6
     concat(tag("div", :id => "week"))
-    yield WeeklyBuilder.new(objects || [], self, options)
+    yield WeeklyBuilder.new(objects || [], self, options, start_date, end_date)
     concat("</div>")
     if options[:include_24_hours] == true
       concat("<b><a href='?business_hours=true'>Business Hours</a> | <a href='?business_hours=false'>24-Hours</a></b>")
@@ -12,8 +15,9 @@ module WeeklyHelper
   end
   
   def weekly_links(options)
-    start_date = options[:start_date]
-    end_date = options[:end_date]
+    date = options[:date]
+    start_date = Date.new(date.year, date.month, date.day) 
+    end_date = Date.new(date.year, date.month, date.day) + 6
     concat("<a href='?start_date=#{start_date - 7}?user_id='>« Previous Week</a> ")
     concat("#{start_date.strftime("%B %d -")} #{end_date.strftime("%B %d")} #{start_date.year}")
     concat(" <a href='?start_date=#{start_date + 7}?user_id='>Next Week »</a>")
@@ -22,14 +26,13 @@ module WeeklyHelper
   class WeeklyBuilder
     include ::ActionView::Helpers::TagHelper
 
-    def initialize(objects, template, options)
+    def initialize(objects, template, options, start_date, end_date)
       raise ArgumentError, "WeeklyBuilder expects an Array but found a #{objects.inspect}" unless objects.is_a? Array
-      @objects, @template, @options = objects, template, options
+      @objects, @template, @options, @start_date, @end_date = objects, template, options, start_date, end_date
     end
-
-    def week(options = {})
+    
+    def week(options = {})    
       days
-      
       if options[:business_hours] == "true" or options[:business_hours].blank?
         hours = ["6am","7am","8am","9am","10am","11am","12pm","1pm","2pm","3pm","4pm","5pm","6pm","7pm","8pm"]
         header_row = "header_row"
@@ -55,7 +58,7 @@ module WeeklyHelper
         concat("</div>")
         
         concat(tag("div", :id => grid))
-          for day in @options[:start_date]..@options[:end_date]
+          for day in @start_date..@end_date
             concat(tag("div", :id => day_row))
             for event in @objects
               if event.starts_at.strftime('%A') == day.strftime('%A') and event.starts_at.strftime('%H').to_i >= start_hour and event.ends_at.strftime('%H').to_i <= end_hour
@@ -70,10 +73,10 @@ module WeeklyHelper
       concat("</div>")
     end
   
-    def days
+    def days      
       concat(tag("div", :id => "days"))
         concat(content_tag("div", "Weekly View", :id => "placeholder"))
-        for day in @options[:start_date]..@options[:end_date]
+        for day in @start_date..@end_date
           concat(tag("div", :id => "day"))
           concat(content_tag("b", day.strftime('%A')))
           concat(tag("br"))
