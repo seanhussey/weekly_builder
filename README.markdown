@@ -15,9 +15,9 @@ Live demo: http://scheduler.integratehq.com
 Install
 =======
 
-script/plugin install git://github.com/dmix/weekly_builder.git 
+./script/plugin install git://github.com/dmix/weekly_builder.git 
 
-Then copy images/stylesheets to public folder
+Then check the output if all images and stylsheets have been copied successfully.
 
 How to Use WeeklyBuilder
 =======
