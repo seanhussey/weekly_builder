@@ -15,7 +15,7 @@ Live demo: http://scheduler.integratehq.com
 Install
 =======
 
-script/install git://github.com/dmix/weekly_builder.git 
+script/plugin install git://github.com/dmix/weekly_builder.git 
 
 Then copy images/stylesheets to public folder
 
