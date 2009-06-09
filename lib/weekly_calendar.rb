@@ -31,7 +31,7 @@ module WeeklyHelper
       @objects, @template, @options, @start_date, @end_date = objects, template, options, start_date, end_date
     end
     
-    def week(options = {})    
+    def week(options = {})
       days
       if options[:business_hours] == "true" or options[:business_hours].blank?
         hours = ["6am","7am","8am","9am","10am","11am","12pm","1pm","2pm","3pm","4pm","5pm","6pm","7pm","8pm"]
@@ -48,7 +48,7 @@ module WeeklyHelper
         start_hour = 1
         end_hour = 24
       end
-      
+
       concat(tag("div", :id => "hours"))
         concat(tag("div", :id => header_row))
           for hour in hours
@@ -56,20 +56,27 @@ module WeeklyHelper
             concat(content_tag("div", header_box, :id => "header_box"))
           end
         concat("</div>")
-        
+
         concat(tag("div", :id => grid))
-          for day in @start_date..@end_date 
+          for day in @start_date..@end_date
             concat(tag("div", :id => day_row))
-            for event in @objects
-              if event.starts_at.strftime('%j').to_s == day.strftime('%j').to_s 
-               if event.starts_at.strftime('%H').to_i >= start_hour and event.ends_at.strftime('%H').to_i <= end_hour
-                  concat(tag("div", :id => "week_event", :style =>"left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;", :onclick => "location.href='/events/#{event.id}';"))
-                    truncate = truncate_width(width(event.starts_at,event.ends_at))
-                    yield(event,truncate)
-                  concat("</div>")
+              hours.each do |h|
+                for event in @objects
+                  if event.start_date.strftime('%j').to_s == day.strftime('%j').to_s
+                    if event.start_date.strftime('%H').to_i >= start_hour and event.end_date.strftime('%H').to_i <= end_hour
+                      concat(tag("div", :id => "week_event", :style =>"left:#{left(event.start_date,options[:business_hours])}px;width:#{width(event.start_date,event.end_date)}px;", :onclick => "location.href='/events/#{event.id}';"))
+                      truncate = truncate_width(width(event.start_date,event.end_date))
+                      yield(event,truncate)
+                      concat("</div>")
+                    end
+                  end
+                end
+
+                if options[:clickable_hours] == true
+                  concat(content_tag("div", '', :id => "click_hour", :onclick => "location.href='/events/new';"))
                 end
               end
-            end
+
             concat("</div>")
           end
         concat("</div>")
