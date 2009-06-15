@@ -7,7 +7,7 @@ module WeeklyHelper
     start_date = Date.new(date.year, date.month, date.day)
     end_date = Date.new(date.year, date.month, date.day) + 6
     concat(tag("div", :id => "week"))
-    yield WeeklyBuilder.new(objects || [], self, options, start_date, end_date)
+      yield WeeklyBuilder.new(objects || [], self, options, start_date, end_date)
     concat("</div>")
     if options[:include_24_hours] == true
       concat("<b><a href='?business_hours=true&start_date=#{start_date}'>Business Hours</a> | <a href='?business_hours=false&start_date=#{start_date}'>24-Hours</a></b>")
@@ -30,9 +30,8 @@ module WeeklyHelper
       raise ArgumentError, "WeeklyBuilder expects an Array but found a #{objects.inspect}" unless objects.is_a? Array
       @objects, @template, @options, @start_date, @end_date = objects, template, options, start_date, end_date
     end
-    
+
     def week(options = {})
-      days
       if options[:business_hours] == "true" or options[:business_hours].blank?
         hours = ["6am","7am","8am","9am","10am","11am","12pm","1pm","2pm","3pm","4pm","5pm","6pm","7pm","8pm"]
         header_row = "header_row"
@@ -48,15 +47,12 @@ module WeeklyHelper
         start_hour = 1
         end_hour = 24
       end
-
+      
+      days #list each day on top row
+      
       concat(tag("div", :id => "hours"))
-        concat(tag("div", :id => header_row))
-          for hour in hours
-            header_box = "<b>#{hour}</b>"
-            concat(content_tag("div", header_box, :id => "header_box"))
-          end
-        concat("</div>")
-
+        hours_column(hours,header_row) #list hours on right column
+              
         concat(tag("div", :id => grid))
           for day in @start_date..@end_date
             concat(tag("div", :id => day_row))
@@ -71,13 +67,8 @@ module WeeklyHelper
                     end
                   end
                 end
-
-                if options[:clickable_hours] == true
-                  concat(content_tag("div", '', :id => "click_hour", :onclick => "location.href='/events/new';"))
-                end
-              end
-
-            concat("</div>")
+              end 
+            concat("</div>")  
           end
         concat("</div>")
       concat("</div>")
@@ -96,8 +87,15 @@ module WeeklyHelper
       concat("</div>")      
     end
     
-    private
+    def hours_column(hours,header_row)
+      concat(tag("div", :id => header_row))
+        for hour in hours
+          concat(content_tag("div", "<b>#{hour}</b>", :id => "header_box"))
+        end
+      concat("</div>")
+    end
     
+    private
     def concat(tag)
       @template.concat(tag)
     end
