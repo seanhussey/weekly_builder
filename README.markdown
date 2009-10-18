@@ -15,16 +15,16 @@ Live demo: http://scheduler.integratehq.com
 Install
 =======
 
-./script/plugin install git://github.com/dmix/weekly_builder.git 
+    script/plugin install git://github.com/dmix/weekly_builder.git 
 
-Then check the output if all images and stylsheets have been copied successfully.
+Then check the output if all images and stylesheets have been copied successfully.
 
 How to Use WeeklyBuilder
 =======
 
 The calendar builder:
     <%  weekly_calendar(@events, :date => @date, :include_24_hours => true) do |w|  %>
-      <%  w.week(:business_hours => params[:business_hours]) do |event,truncate|  %>
+      <%  w.week(:business_hours => params[:business_hours], :clickable_hours => true) do |event,truncate|  %>
         <%=  event.starts_at.strftime('%I:%M%p')  %>
         <%=  link_to truncate(event.name,truncate), event_path(event)  %>
       <% end -%>

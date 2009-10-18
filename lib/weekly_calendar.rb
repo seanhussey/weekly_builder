@@ -9,7 +9,7 @@ module WeeklyCalendar
     end_date = Date.new(date.year, date.month, date.day) + 6
     
     concat(tag("div", :id => "week"))
-    
+  
       yield WeeklyCalendar::Builder.new(objects || [], self, options, start_date, end_date)
       
     concat("</div>")
@@ -21,7 +21,7 @@ module WeeklyCalendar
   
   def weekly_links(options)
     #view helper to insert the next and previous week links
-    date = options[:date]
+    date = options[:date] || Time.now
     start_date = Date.new(date.year, date.month, date.day) 
     end_date = Date.new(date.year, date.month, date.day) + 7
     concat("<a href='?start_date=#{start_date - 7}?user_id='>« Previous Week</a> ")
