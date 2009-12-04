@@ -9,12 +9,12 @@ class WeeklyCalendar::Builder
   end
   
   def days
-    concat(tag("div", {:id => "days"}, true))
-      concat(content_tag("div", "Weekly View", :id => "placeholder"))
+    concat(tag("div", {:id => "days", :class => "days"}, true))
+      concat(content_tag("div", "Weekly View", :id => "placeholder", :class => "placeholder"))
       for day in @start_date..@end_date 
         days_events = events_in_day(@objects, day)
         height = days_events.length * @event_height <= @default_day_height ? @default_day_height : days_events.length * @event_height
-        concat(tag("div", {:id => "day", :style => "height: #{height}px;"}, true))
+        concat(tag("div", {:id => "day", :class => "day", :style => "height: #{height}px;"}, true))
           concat(tag("div", {:class => "day-label"}, true))
             concat(content_tag("b", day.strftime('%A')))
             concat(tag("br"))
@@ -26,7 +26,6 @@ class WeeklyCalendar::Builder
   end
   
   def week(options = {})    
-    
     if options[:business_hours] == "true" or options[:business_hours].blank?
       hours = ["6am","7am","8am","9am","10am","11am","12pm","1pm","2pm","3pm","4pm","5pm","6pm","7pm","8pm"]
       header_row = "header_row"
@@ -43,21 +42,29 @@ class WeeklyCalendar::Builder
       @end_hour = 24
     end
     days
-    concat(tag("div", {:id => "hours"}, true))
-      concat(tag("div", {:id => header_row}, true))
+    concat(tag("div", {:id => "hours", :class => "hours"}, true))
+      concat(tag("div", {:id => header_row, :class => header_row}, true))
         for hour in hours
           header_box = "<b>#{hour}</b>"
-          concat(content_tag("div", header_box, :id => "header_box"))
+          concat(content_tag("div", header_box, :id => "header_box", :class => "header_box"))
         end
       concat("</div>")
-      concat(tag("div", {:id => grid}, true))
+      concat(tag("div", {:id => grid, :class => grid}, true))
         for day in @start_date..@end_date 
           days_events = events_in_day(@objects, day)
           height = days_events.length * @event_height <= @default_day_height ? @default_day_height : days_events.length * @event_height
-          concat(tag("div", {:id => day_row, :style => "height: #{height}px;"}, true))
+          concat(tag("div", {:id => day_row, :class => day_row, :style => "height: #{height}px;"}, true))
           i = 0
           for event in days_events
-            concat(tag("div", {:id => "week_event", :style =>"top: #{i * @event_height}px;left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;", :onclick => "location.href='/tasks/#{event.task.id}';"}, true))
+            div_options = {
+              :id => "week_event",
+              :class => "week_event",
+              :style =>"top: #{i * @event_height}px;left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;"
+            }
+            if options[:clickable_hours] == true
+              div_options.merge!({:onclick => "location.href='/tasks/#{event.task.id}';"})
+            end
+            concat(tag("div", div_options, true))
               truncate = truncate_width(width(event.starts_at,event.ends_at))
               yield(event,truncate)
             concat("</div>")

@@ -46,7 +46,5 @@ Thanks to P8 http://github.com/p8/table_builder/
 
 TODO
 =======
-* IE6 Friendly (so far only tested on FF3 + Safari 4)
 * Testing
-* Refactor concats to be nested
-* Single @date instead of @start_date + @end_date
+* Refactor
