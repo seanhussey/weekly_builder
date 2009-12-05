@@ -90,7 +90,7 @@ class WeeklyCalendar::Builder
               div_options.merge!({:onclick => "location.href='/tasks/#{event.task.id}';"})
             end
             concat(tag("div", div_options, true))
-              all_day = true
+              all_day = false
               truncate = truncate_width(width(event.starts_at,event.ends_at))
               yield(event, truncate, all_day)
             concat("</div>")
