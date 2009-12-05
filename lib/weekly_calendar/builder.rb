@@ -11,10 +11,10 @@ class WeeklyCalendar::Builder
   def days
     concat(tag("div", {:id => "days", :class => "days"}, true))
       concat(content_tag("div", "Weekly View", :id => "placeholder", :class => "placeholder"))
-      for day in @start_date..@end_date 
+      (@start_date..@end_date).each_with_index do |day, index| 
         days_events = events_in_day(@objects, day)
         height = days_events.length * @event_height <= @default_day_height ? @default_day_height : days_events.length * @event_height
-        concat(tag("div", {:id => "day", :class => "day", :style => "height: #{height}px;"}, true))
+        concat(tag("div", {:id => "day_#{index}", :class => "day", :style => "height: #{height}px;"}, true))
           concat(tag("div", {:class => "day-label"}, true))
             concat(content_tag("b", day.strftime('%A')))
             concat(tag("br"))
@@ -44,20 +44,19 @@ class WeeklyCalendar::Builder
     days
     concat(tag("div", {:id => "hours", :class => "hours"}, true))
       concat(tag("div", {:id => header_row, :class => header_row}, true))
-        for hour in hours
+        hours.each_with_index do |hour, index|
           header_box = "<b>#{hour}</b>"
-          concat(content_tag("div", header_box, :id => "header_box", :class => "header_box"))
+          concat(content_tag("div", header_box, :id => "header_box_#{index}", :class => "header_box"))
         end
       concat("</div>")
       concat(tag("div", {:id => grid, :class => grid}, true))
-        for day in @start_date..@end_date 
+        (@start_date..@end_date).each_with_index do |day, index|  
           days_events = events_in_day(@objects, day)
           height = days_events.length * @event_height <= @default_day_height ? @default_day_height : days_events.length * @event_height
-          concat(tag("div", {:id => day_row, :class => day_row, :style => "height: #{height}px;"}, true))
-          i = 0
-          for event in days_events
+          concat(tag("div", {:id => "#{day_row}_#{index}", :class => day_row, :style => "height: #{height}px;"}, true))
+          days_events.each_with_index do |event, i|
             div_options = {
-              :id => "week_event",
+              :id => "week_event_#{i}",
               :class => "week_event",
               :style =>"top: #{i * @event_height}px;left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;"
             }
@@ -68,7 +67,6 @@ class WeeklyCalendar::Builder
               truncate = truncate_width(width(event.starts_at,event.ends_at))
               yield(event,truncate)
             concat("</div>")
-            i = i+1
           end
           concat("</div>")
         end
