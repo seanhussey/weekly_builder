@@ -2,7 +2,8 @@
 /* layout */
 #week{background:#FFF;border:1px solid #ccc;overflow:hidden;}
 #days{float:left;width:15%;}
-#hours{width:85%;float:right;overflow-y:hidden;overflow-x:scroll; position:relative;}
+#all_day_events{float:left;width:15%;}
+#hours{width: 70%; float:right;overflow-y:hidden;overflow-x:scroll; position:relative;}
 #grid{background-color:#FFEDCA;background-image:url(../images/grid.png);background-attachment:inherit;width:1125px;}
 
 /* boxes */
@@ -23,7 +24,7 @@
   font-size: 14px;
   padding: 10px;
 }
-#placeholder {
+.placeholder {
   height: 39px;
   background: #FFF;
   border-top: 1px solid #fff;

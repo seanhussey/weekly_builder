@@ -11,6 +11,10 @@ class WeeklyCalendarTest < ActiveSupport::TestCase
     @no_tasks = []
     @tasks = [stub(:starts_at => Time.parse("12/5/2009 8:00 AM"), :ends_at => Time.parse("12/5/2009 12:00 PM"), :name => "Test Task"),
               stub(:starts_at => Time.parse("12/5/2009 8:00 AM"), :ends_at => Time.parse("12/5/2009 12:00 PM"), :name => "Test Task2")]
+    @mixed_tasks = [stub(:starts_at => Time.parse("12/5/2009 8:00 AM"), :ends_at => Time.parse("12/5/2009 12:00 PM"), :name => "Test Task"),
+                    stub(:starts_at => Time.parse("12/5/2009 8:00 AM"), :ends_at => Time.parse("12/5/2009 12:00 PM"), :name => "Test Task2"),
+                    stub(:starts_at => Time.parse("12/5/2009 00:00 AM"), :ends_at => Time.parse("12/5/2009 11:59 PM"), :name => "Test Task2"),
+                    stub(:starts_at => Time.parse("12/5/2009 00:00 AM"), :ends_at => Time.parse("12/5/2009 11:59 PM"), :name => "Test Task2")]
   end
   
   should "raise an error if the no array is passed" do
@@ -46,49 +50,58 @@ class WeeklyCalendarTest < ActiveSupport::TestCase
     end
     expected = %(<div id=\"week\">)<<
                   %(<div class=\"days\" id=\"days\">)<<
-                    %(<div class=\"placeholder\" id=\"placeholder\">Weekly View</div>)<<
-                    %(<div class=\"day\" id=\"day_0\" style=\"height: 75px;\"><div class=\"day-label\"><b>Friday</b><br />December 26</div></div>)<<
-                    %(<div class=\"day\" id=\"day_1\" style=\"height: 75px;\"><div class=\"day-label\"><b>Saturday</b><br />December 27</div></div>)<<
-                    %(<div class=\"day\" id=\"day_2\" style=\"height: 75px;\"><div class=\"day-label\"><b>Sunday</b><br />December 28</div></div>)<<
-                    %(<div class=\"day\" id=\"day_3\" style=\"height: 75px;\"><div class=\"day-label\"><b>Monday</b><br />December 29</div></div>)<<
-                    %(<div class=\"day\" id=\"day_4\" style=\"height: 75px;\"><div class=\"day-label\"><b>Tuesday</b><br />December 30</div></div>)<<
-                    %(<div class=\"day\" id=\"day_5\" style=\"height: 75px;\"><div class=\"day-label\"><b>Wednesday</b><br />December 31</div></div>)<<
-                    %(<div class=\"day\" id=\"day_6\" style=\"height: 75px;\"><div class=\"day-label\"><b>Thursday</b><br />January 01</div></div></div>)<<
-                  %(<div class=\"hours\" id=\"hours\">)<<
-                    %(<div class=\"full_header_row\" id=\"full_header_row\">)<<
-                      %(<div class=\"header_box\" id=\"header_box_0\"><b>12am</b></div>)<<
-                      %(<div class=\"header_box\" id=\"header_box_1\"><b>1am</b></div>)<<
-                      %(<div class=\"header_box\" id=\"header_box_2\"><b>2am</b></div>)<<
-                      %(<div class=\"header_box\" id=\"header_box_3\"><b>3am</b></div>)<<
-                      %(<div class=\"header_box\" id=\"header_box_4\"><b>4am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_5\"><b>5am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_6\"><b>6am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_7\"><b>7am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_8\"><b>8am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_9\"><b>9am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_10\"><b>10am</b></div>) <<
-                      %(<div class=\"header_box\" id=\"header_box_11\"><b>11am</b></div>) <<
-                      %(<div class=\"header_box\" id=\"header_box_12\"><b>12pm</b></div>) <<
-                      %(<div class=\"header_box\" id=\"header_box_13\"><b>1pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_14\"><b>2pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_15\"><b>3pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_16\"><b>4pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_17\"><b>5pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_18\"><b>6pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_19\"><b>7pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_20\"><b>8pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_21\"><b>9pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_22\"><b>10pm</b></div>) <<
-                      %(<div class=\"header_box\" id=\"header_box_23\"><b>11pm</b></div></div>)<<
-                    %(<div class=\"full_grid\" id=\"full_grid\">)<<
-                      %(<div class=\"full_day_row\" id=\"full_day_row_0\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"full_day_row\" id=\"full_day_row_1\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"full_day_row\" id=\"full_day_row_2\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"full_day_row\" id=\"full_day_row_3\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"full_day_row\" id=\"full_day_row_4\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"full_day_row\" id=\"full_day_row_5\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"full_day_row\" id=\"full_day_row_6\" style=\"height: 75px;\"></div>)<<
-                      %(</div></div></div>)                                                          
+                    %(<div class=\"placeholder\" id=\"placeholder\">Weekly View</div>)                                                                  <<
+                      %(<div class=\"day\" id=\"day_0\" style=\"height: 75px;\"><div class=\"day-label\"><b>Friday</b><br />December 26</div></div>)      <<
+                      %(<div class=\"day\" id=\"day_1\" style=\"height: 75px;\"><div class=\"day-label\"><b>Saturday</b><br />December 27</div></div>)    <<
+                      %(<div class=\"day\" id=\"day_2\" style=\"height: 75px;\"><div class=\"day-label\"><b>Sunday</b><br />December 28</div></div>)      <<
+                      %(<div class=\"day\" id=\"day_3\" style=\"height: 75px;\"><div class=\"day-label\"><b>Monday</b><br />December 29</div></div>)      <<
+                      %(<div class=\"day\" id=\"day_4\" style=\"height: 75px;\"><div class=\"day-label\"><b>Tuesday</b><br />December 30</div></div>)     <<
+                      %(<div class=\"day\" id=\"day_5\" style=\"height: 75px;\"><div class=\"day-label\"><b>Wednesday</b><br />December 31</div></div>)   <<
+                      %(<div class=\"day\" id=\"day_6\" style=\"height: 75px;\"><div class=\"day-label\"><b>Thursday</b><br />January 01</div></div>)     <<
+                    %(</div><div class=\"all_day_events\" id=\"all_day_events\"><div class=\"placeholder\" id=\"all-day-placeholder\">All Day</div>)    <<
+                      %(<div class=\"days_tasks\" id=\"days_tasks_0\" style=\"height: 75px;\"></div>)                                                     <<
+                      %(<div class=\"days_tasks\" id=\"days_tasks_1\" style=\"height: 75px;\"></div>)                                                     <<
+                      %(<div class=\"days_tasks\" id=\"days_tasks_2\" style=\"height: 75px;\"></div>)                                                     <<
+                      %(<div class=\"days_tasks\" id=\"days_tasks_3\" style=\"height: 75px;\"></div>)                                                     <<
+                      %(<div class=\"days_tasks\" id=\"days_tasks_4\" style=\"height: 75px;\"></div>)                                                     <<
+                      %(<div class=\"days_tasks\" id=\"days_tasks_5\" style=\"height: 75px;\"></div>)                                                     <<
+                      %(<div class=\"days_tasks\" id=\"days_tasks_6\" style=\"height: 75px;\"></div>)                                                     <<
+                    %(</div><div class=\"hours\" id=\"hours\">)                                                                                         <<
+                    %(<div class=\"full_header_row\" id=\"full_header_row\">)                                                                           <<
+                      %(<div class=\"header_box\" id=\"header_box_0\"><b>12am</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_1\"><b>1am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_2\"><b>2am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_3\"><b>3am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_4\"><b>4am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_5\"><b>5am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_6\"><b>6am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_7\"><b>7am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_8\"><b>8am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_9\"><b>9am</b></div>)                                                                   <<
+                      %(<div class=\"header_box\" id=\"header_box_10\"><b>10am</b></div>)                                                                 <<
+                      %(<div class=\"header_box\" id=\"header_box_11\"><b>11am</b></div>)                                                                 <<
+                      %(<div class=\"header_box\" id=\"header_box_12\"><b>12pm</b></div>)                                                                 <<
+                      %(<div class=\"header_box\" id=\"header_box_13\"><b>1pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_14\"><b>2pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_15\"><b>3pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_16\"><b>4pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_17\"><b>5pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_18\"><b>6pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_19\"><b>7pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_20\"><b>8pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_21\"><b>9pm</b></div>)                                                                  <<
+                      %(<div class=\"header_box\" id=\"header_box_22\"><b>10pm</b></div>)                                                                 <<
+                      %(<div class=\"header_box\" id=\"header_box_23\"><b>11pm</b></div>)                                                                 <<
+                    %(</div><div class=\"full_grid\" id=\"full_grid\">)                                                                                 <<
+                      %(<div class=\"full_day_row\" id=\"full_day_row_0\" style=\"height: 75px;\"></div>)                                                 <<
+                      %(<div class=\"full_day_row\" id=\"full_day_row_1\" style=\"height: 75px;\"></div>)                                                 <<
+                      %(<div class=\"full_day_row\" id=\"full_day_row_2\" style=\"height: 75px;\"></div>)                                                 <<
+                      %(<div class=\"full_day_row\" id=\"full_day_row_3\" style=\"height: 75px;\"></div>)                                                 <<
+                      %(<div class=\"full_day_row\" id=\"full_day_row_4\" style=\"height: 75px;\"></div>)                                                 <<
+                      %(<div class=\"full_day_row\" id=\"full_day_row_5\" style=\"height: 75px;\"></div>)                                                 <<
+                      %(<div class=\"full_day_row\" id=\"full_day_row_6\" style=\"height: 75px;\"></div>)                                                 <<
+                    %(</div></div></div>)
+                                                            
     assert_dom_equal expected, output_buffer
   end
   
@@ -99,42 +112,7 @@ class WeeklyCalendarTest < ActiveSupport::TestCase
         "Test"
       end
     end
-    expected = %(<div id=\"week\">)<<
-                  %(<div class=\"days\" id=\"days\">)<<
-                    %(<div class=\"placeholder\" id=\"placeholder\">Weekly View</div>)<<
-                    %(<div class=\"day\" id=\"day_0\" style=\"height: 75px;\"><div class=\"day-label\"><b>Friday</b><br />December 26</div></div>)<<
-                    %(<div class=\"day\" id=\"day_1\" style=\"height: 75px;\"><div class=\"day-label\"><b>Saturday</b><br />December 27</div></div>)<<
-                    %(<div class=\"day\" id=\"day_2\" style=\"height: 75px;\"><div class=\"day-label\"><b>Sunday</b><br />December 28</div></div>)<<
-                    %(<div class=\"day\" id=\"day_3\" style=\"height: 75px;\"><div class=\"day-label\"><b>Monday</b><br />December 29</div></div>)<<
-                    %(<div class=\"day\" id=\"day_4\" style=\"height: 75px;\"><div class=\"day-label\"><b>Tuesday</b><br />December 30</div></div>)<<
-                    %(<div class=\"day\" id=\"day_5\" style=\"height: 75px;\"><div class=\"day-label\"><b>Wednesday</b><br />December 31</div></div>)<<
-                    %(<div class=\"day\" id=\"day_6\" style=\"height: 75px;\"><div class=\"day-label\"><b>Thursday</b><br />January 01</div></div></div>)<<
-                  %(<div class=\"hours\" id=\"hours\">)<<
-                    %(<div class=\"header_row\" id=\"header_row\">)<<
-                      %(<div class=\"header_box\" id=\"header_box_0\"><b>6am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_1\"><b>7am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_2\"><b>8am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_3\"><b>9am</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_4\"><b>10am</b></div>) <<
-                      %(<div class=\"header_box\" id=\"header_box_5\"><b>11am</b></div>) <<
-                      %(<div class=\"header_box\" id=\"header_box_6\"><b>12pm</b></div>) <<
-                      %(<div class=\"header_box\" id=\"header_box_7\"><b>1pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_8\"><b>2pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_9\"><b>3pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_10\"><b>4pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_11\"><b>5pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_12\"><b>6pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_13\"><b>7pm</b></div>)  <<
-                      %(<div class=\"header_box\" id=\"header_box_14\"><b>8pm</b></div></div>)<<
-                    %(<div class=\"grid\" id=\"grid\">)<<
-                      %(<div class=\"day_row\" id=\"day_row_0\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"day_row\" id=\"day_row_1\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"day_row\" id=\"day_row_2\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"day_row\" id=\"day_row_3\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"day_row\" id=\"day_row_4\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"day_row\" id=\"day_row_5\" style=\"height: 75px;\"></div>)<<
-                      %(<div class=\"day_row\" id=\"day_row_6\" style=\"height: 75px;\"></div>)<<
-                      %(</div></div></div>)                                                          
+    expected = %(<div id=\"week\"><div class=\"days\" id=\"days\"><div class=\"placeholder\" id=\"placeholder\">Weekly View</div><div class=\"day\" id=\"day_0\" style=\"height: 75px;\"><div class=\"day-label\"><b>Friday</b><br />December 26</div></div><div class=\"day\" id=\"day_1\" style=\"height: 75px;\"><div class=\"day-label\"><b>Saturday</b><br />December 27</div></div><div class=\"day\" id=\"day_2\" style=\"height: 75px;\"><div class=\"day-label\"><b>Sunday</b><br />December 28</div></div><div class=\"day\" id=\"day_3\" style=\"height: 75px;\"><div class=\"day-label\"><b>Monday</b><br />December 29</div></div><div class=\"day\" id=\"day_4\" style=\"height: 75px;\"><div class=\"day-label\"><b>Tuesday</b><br />December 30</div></div><div class=\"day\" id=\"day_5\" style=\"height: 75px;\"><div class=\"day-label\"><b>Wednesday</b><br />December 31</div></div><div class=\"day\" id=\"day_6\" style=\"height: 75px;\"><div class=\"day-label\"><b>Thursday</b><br />January 01</div></div></div><div class=\"all_day_events\" id=\"all_day_events\"><div class=\"placeholder\" id=\"all-day-placeholder\">All Day</div><div class=\"days_tasks\" id=\"days_tasks_0\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_1\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_2\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_3\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_4\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_5\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_6\" style=\"height: 75px;\"></div></div><div class=\"hours\" id=\"hours\"><div class=\"header_row\" id=\"header_row\"><div class=\"header_box\" id=\"header_box_0\"><b>6am</b></div><div class=\"header_box\" id=\"header_box_1\"><b>7am</b></div><div class=\"header_box\" id=\"header_box_2\"><b>8am</b></div><div class=\"header_box\" id=\"header_box_3\"><b>9am</b></div><div class=\"header_box\" id=\"header_box_4\"><b>10am</b></div><div class=\"header_box\" id=\"header_box_5\"><b>11am</b></div><div class=\"header_box\" id=\"header_box_6\"><b>12pm</b></div><div class=\"header_box\" id=\"header_box_7\"><b>1pm</b></div><div class=\"header_box\" id=\"header_box_8\"><b>2pm</b></div><div class=\"header_box\" id=\"header_box_9\"><b>3pm</b></div><div class=\"header_box\" id=\"header_box_10\"><b>4pm</b></div><div class=\"header_box\" id=\"header_box_11\"><b>5pm</b></div><div class=\"header_box\" id=\"header_box_12\"><b>6pm</b></div><div class=\"header_box\" id=\"header_box_13\"><b>7pm</b></div><div class=\"header_box\" id=\"header_box_14\"><b>8pm</b></div></div><div class=\"grid\" id=\"grid\"><div class=\"day_row\" id=\"day_row_0\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_1\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_2\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_3\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_4\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_5\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_6\" style=\"height: 75px;\"></div></div></div></div>)                                                          
     assert_dom_equal expected, output_buffer
   end
   
@@ -145,9 +123,21 @@ class WeeklyCalendarTest < ActiveSupport::TestCase
         "#{time_slot.name} Test"
       end
     end
-    expected = %(<div id=\"week\"><div class=\"days\" id=\"days\"><div class=\"placeholder\" id=\"placeholder\">Weekly View</div><div class=\"day\" id=\"day_0\" style=\"height: 75px;\"><div class=\"day-label\"><b>Wednesday</b><br />December 02</div></div><div class=\"day\" id=\"day_1\" style=\"height: 75px;\"><div class=\"day-label\"><b>Thursday</b><br />December 03</div></div><div class=\"day\" id=\"day_2\" style=\"height: 75px;\"><div class=\"day-label\"><b>Friday</b><br />December 04</div></div><div class=\"day\" id=\"day_3\" style=\"height: 75px;\"><div class=\"day-label\"><b>Saturday</b><br />December 05</div></div><div class=\"day\" id=\"day_4\" style=\"height: 75px;\"><div class=\"day-label\"><b>Sunday</b><br />December 06</div></div><div class=\"day\" id=\"day_5\" style=\"height: 75px;\"><div class=\"day-label\"><b>Monday</b><br />December 07</div></div><div class=\"day\" id=\"day_6\" style=\"height: 75px;\"><div class=\"day-label\"><b>Tuesday</b><br />December 08</div></div></div><div class=\"hours\" id=\"hours\"><div class=\"full_header_row\" id=\"full_header_row\"><div class=\"header_box\" id=\"header_box_0\"><b>12am</b></div><div class=\"header_box\" id=\"header_box_1\"><b>1am</b></div><div class=\"header_box\" id=\"header_box_2\"><b>2am</b></div><div class=\"header_box\" id=\"header_box_3\"><b>3am</b></div><div class=\"header_box\" id=\"header_box_4\"><b>4am</b></div><div class=\"header_box\" id=\"header_box_5\"><b>5am</b></div><div class=\"header_box\" id=\"header_box_6\"><b>6am</b></div><div class=\"header_box\" id=\"header_box_7\"><b>7am</b></div><div class=\"header_box\" id=\"header_box_8\"><b>8am</b></div><div class=\"header_box\" id=\"header_box_9\"><b>9am</b></div><div class=\"header_box\" id=\"header_box_10\"><b>10am</b></div><div class=\"header_box\" id=\"header_box_11\"><b>11am</b></div><div class=\"header_box\" id=\"header_box_12\"><b>12pm</b></div><div class=\"header_box\" id=\"header_box_13\"><b>1pm</b></div><div class=\"header_box\" id=\"header_box_14\"><b>2pm</b></div><div class=\"header_box\" id=\"header_box_15\"><b>3pm</b></div><div class=\"header_box\" id=\"header_box_16\"><b>4pm</b></div><div class=\"header_box\" id=\"header_box_17\"><b>5pm</b></div><div class=\"header_box\" id=\"header_box_18\"><b>6pm</b></div><div class=\"header_box\" id=\"header_box_19\"><b>7pm</b></div><div class=\"header_box\" id=\"header_box_20\"><b>8pm</b></div><div class=\"header_box\" id=\"header_box_21\"><b>9pm</b></div><div class=\"header_box\" id=\"header_box_22\"><b>10pm</b></div><div class=\"header_box\" id=\"header_box_23\"><b>11pm</b></div></div><div class=\"full_grid\" id=\"full_grid\"><div class=\"full_day_row\" id=\"full_day_row_0\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_1\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_2\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_3\" style=\"height: 75px;\"><div class=\"week_event\" id=\"week_event_0\" style=\"top: 0px;left:600.0px;width:288.0px;\"></div><div class=\"week_event\" id=\"week_event_1\" style=\"top: 29px;left:600.0px;width:288.0px;\"></div></div><div class=\"full_day_row\" id=\"full_day_row_4\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_5\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_6\" style=\"height: 75px;\"></div></div></div></div>)
+    expected = %(<div id=\"week\"><div class=\"days\" id=\"days\"><div class=\"placeholder\" id=\"placeholder\">Weekly View</div><div class=\"day\" id=\"day_0\" style=\"height: 75px;\"><div class=\"day-label\"><b>Wednesday</b><br />December 02</div></div><div class=\"day\" id=\"day_1\" style=\"height: 75px;\"><div class=\"day-label\"><b>Thursday</b><br />December 03</div></div><div class=\"day\" id=\"day_2\" style=\"height: 75px;\"><div class=\"day-label\"><b>Friday</b><br />December 04</div></div><div class=\"day\" id=\"day_3\" style=\"height: 75px;\"><div class=\"day-label\"><b>Saturday</b><br />December 05</div></div><div class=\"day\" id=\"day_4\" style=\"height: 75px;\"><div class=\"day-label\"><b>Sunday</b><br />December 06</div></div><div class=\"day\" id=\"day_5\" style=\"height: 75px;\"><div class=\"day-label\"><b>Monday</b><br />December 07</div></div><div class=\"day\" id=\"day_6\" style=\"height: 75px;\"><div class=\"day-label\"><b>Tuesday</b><br />December 08</div></div></div><div class=\"all_day_events\" id=\"all_day_events\"><div class=\"placeholder\" id=\"all-day-placeholder\">All Day</div><div class=\"days_tasks\" id=\"days_tasks_0\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_1\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_2\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_3\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_4\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_5\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_6\" style=\"height: 75px;\"></div></div><div class=\"hours\" id=\"hours\"><div class=\"full_header_row\" id=\"full_header_row\"><div class=\"header_box\" id=\"header_box_0\"><b>12am</b></div><div class=\"header_box\" id=\"header_box_1\"><b>1am</b></div><div class=\"header_box\" id=\"header_box_2\"><b>2am</b></div><div class=\"header_box\" id=\"header_box_3\"><b>3am</b></div><div class=\"header_box\" id=\"header_box_4\"><b>4am</b></div><div class=\"header_box\" id=\"header_box_5\"><b>5am</b></div><div class=\"header_box\" id=\"header_box_6\"><b>6am</b></div><div class=\"header_box\" id=\"header_box_7\"><b>7am</b></div><div class=\"header_box\" id=\"header_box_8\"><b>8am</b></div><div class=\"header_box\" id=\"header_box_9\"><b>9am</b></div><div class=\"header_box\" id=\"header_box_10\"><b>10am</b></div><div class=\"header_box\" id=\"header_box_11\"><b>11am</b></div><div class=\"header_box\" id=\"header_box_12\"><b>12pm</b></div><div class=\"header_box\" id=\"header_box_13\"><b>1pm</b></div><div class=\"header_box\" id=\"header_box_14\"><b>2pm</b></div><div class=\"header_box\" id=\"header_box_15\"><b>3pm</b></div><div class=\"header_box\" id=\"header_box_16\"><b>4pm</b></div><div class=\"header_box\" id=\"header_box_17\"><b>5pm</b></div><div class=\"header_box\" id=\"header_box_18\"><b>6pm</b></div><div class=\"header_box\" id=\"header_box_19\"><b>7pm</b></div><div class=\"header_box\" id=\"header_box_20\"><b>8pm</b></div><div class=\"header_box\" id=\"header_box_21\"><b>9pm</b></div><div class=\"header_box\" id=\"header_box_22\"><b>10pm</b></div><div class=\"header_box\" id=\"header_box_23\"><b>11pm</b></div></div><div class=\"full_grid\" id=\"full_grid\"><div class=\"full_day_row\" id=\"full_day_row_0\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_1\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_2\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_3\" style=\"height: 75px;\"><div class=\"week_event\" id=\"week_event_339_0\" style=\"top: 0px;left:600.0px;width:288.0px;\"></div><div class=\"week_event\" id=\"week_event_339_1\" style=\"top: 29px;left:600.0px;width:288.0px;\"></div></div><div class=\"full_day_row\" id=\"full_day_row_4\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_5\" style=\"height: 75px;\"></div><div class=\"full_day_row\" id=\"full_day_row_6\" style=\"height: 75px;\"></div></div></div></div>)
     assert_dom_equal expected, output_buffer
-    assert output_buffer.include?("<div class=\"week_event\" id=\"week_event_0\"")
+    assert output_buffer.include?("<div class=\"week_event\" id=\"week_event_339_0\""), "The output should have a dive with an id of week_event_339_0."
+  end
+  
+  should "generate a weekly calendar with a mix of all day and timed tasks" do
+    self.output_buffer = ''
+    weekly_calendar(@mixed_tasks, :date => Date.parse("12/02/2009 12:00 AM"), :include_24_hours => false) do |w|
+      w.week(:business_hours => false, :clickable_hours => false) do |time_slot,truncate| 
+        "#{time_slot.name} Test"
+      end
+    end
+    expected = %(<div id=\"week\"><div class=\"days\" id=\"days\"><div class=\"placeholder\" id=\"placeholder\">Weekly View</div><div class=\"day\" id=\"day_0\" style=\"height: 75px;\"><div class=\"day-label\"><b>Wednesday</b><br />December 02</div></div><div class=\"day\" id=\"day_1\" style=\"height: 75px;\"><div class=\"day-label\"><b>Thursday</b><br />December 03</div></div><div class=\"day\" id=\"day_2\" style=\"height: 75px;\"><div class=\"day-label\"><b>Friday</b><br />December 04</div></div><div class=\"day\" id=\"day_3\" style=\"height: 75px;\"><div class=\"day-label\"><b>Saturday</b><br />December 05</div></div><div class=\"day\" id=\"day_4\" style=\"height: 75px;\"><div class=\"day-label\"><b>Sunday</b><br />December 06</div></div><div class=\"day\" id=\"day_5\" style=\"height: 75px;\"><div class=\"day-label\"><b>Monday</b><br />December 07</div></div><div class=\"day\" id=\"day_6\" style=\"height: 75px;\"><div class=\"day-label\"><b>Tuesday</b><br />December 08</div></div></div><div class=\"all_day_events\" id=\"all_day_events\"><div class=\"placeholder\" id=\"all-day-placeholder\">All Day</div><div class=\"days_tasks\" id=\"days_tasks_0\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_1\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_2\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_3\" style=\"height: 75px;\"><div class=\"all_day_event\" id=\"all_day_event_339_0\"></div><div class=\"all_day_event\" id=\"all_day_event_339_1\"></div></div><div class=\"days_tasks\" id=\"days_tasks_4\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_5\" style=\"height: 75px;\"></div><div class=\"days_tasks\" id=\"days_tasks_6\" style=\"height: 75px;\"></div></div><div class=\"hours\" id=\"hours\"><div class=\"header_row\" id=\"header_row\"><div class=\"header_box\" id=\"header_box_0\"><b>6am</b></div><div class=\"header_box\" id=\"header_box_1\"><b>7am</b></div><div class=\"header_box\" id=\"header_box_2\"><b>8am</b></div><div class=\"header_box\" id=\"header_box_3\"><b>9am</b></div><div class=\"header_box\" id=\"header_box_4\"><b>10am</b></div><div class=\"header_box\" id=\"header_box_5\"><b>11am</b></div><div class=\"header_box\" id=\"header_box_6\"><b>12pm</b></div><div class=\"header_box\" id=\"header_box_7\"><b>1pm</b></div><div class=\"header_box\" id=\"header_box_8\"><b>2pm</b></div><div class=\"header_box\" id=\"header_box_9\"><b>3pm</b></div><div class=\"header_box\" id=\"header_box_10\"><b>4pm</b></div><div class=\"header_box\" id=\"header_box_11\"><b>5pm</b></div><div class=\"header_box\" id=\"header_box_12\"><b>6pm</b></div><div class=\"header_box\" id=\"header_box_13\"><b>7pm</b></div><div class=\"header_box\" id=\"header_box_14\"><b>8pm</b></div></div><div class=\"grid\" id=\"grid\"><div class=\"day_row\" id=\"day_row_0\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_1\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_2\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_3\" style=\"height: 75px;\"><div class=\"week_event\" id=\"week_event_339_0\" style=\"top: 0px;left:150.0px;width:288.0px;\"></div><div class=\"week_event\" id=\"week_event_339_1\" style=\"top: 29px;left:150.0px;width:288.0px;\"></div></div><div class=\"day_row\" id=\"day_row_4\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_5\" style=\"height: 75px;\"></div><div class=\"day_row\" id=\"day_row_6\" style=\"height: 75px;\"></div></div></div></div>)
+    assert_dom_equal expected, output_buffer
+    assert output_buffer.include?("<div class=\"all_day_event\" id=\"all_day_event_339_1\">"), "The output should have a dive with an id of all_day_event_339_1."
   end
   
   should "generate a weekly calendar without tasks or a start date" do
