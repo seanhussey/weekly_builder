@@ -1,10 +1,10 @@
 /* -- WeeklyBuilder -- */
 /* layout */
 #week{background:#FFF;border:1px solid #ccc;overflow:hidden;}
-#days{float:left;width:15%;}
-#all_day_events{float:left;width:15%;}
+#days{float:left;width:12%;}
+#all_day_events{float:left;width:18%;}
 #hours{width: 70%; float:right;overflow-y:hidden;overflow-x:scroll; position:relative;}
-#grid{background-color:#FFEDCA;background-image:url(../images/grid.png);background-attachment:inherit;width:1125px;}
+#grid{background-color:#d4e6ec;background-image:url(../images/grid.png);background-attachment:inherit;width:1125px;}
 
 /* boxes */
 #header_row {width:1125px;height:54px;background:#A8CFDA;margin-bottom:1px;}
@@ -21,32 +21,50 @@
 #hour{height:50px;width:55px;padding:25px 0px 0px 20px;float:left;}
 .day{height:57px;border-right:1px solid #8F8F8F;border-top:1px solid #ccc;padding:0px;}
 .day-label {
-  font-size: 14px;
-  padding: 10px;
+  font-size: 13px;
+  padding: 5px;
+}
+.days_tasks {
+  border-right:1px solid #8F8F8F;
+  border-top:1px solid #ccc;
+  padding:0px;
+  background-color: #f8f8f8;
 }
 .placeholder {
   height: 39px;
   background: #FFF;
   border-top: 1px solid #fff;
   border-right: 1px solid #ccc;
-  padding: 15px 0px 0px 18px;
+  padding: 15px 0px 0px 5px;
   background-image: url(../images/placeholder_row.png);
 }
 .day_row{width:1125px;height:75px;position:relative;border-top:1px solid #ccc;}
-.day_row .week_event{background:#CD8AA4;float:left;position:absolute;height:20px;color:#000;padding:4px;border-left:4px solid #5A484F;border-top: 1px solid #5A484F;opacity:0.90;filter:alpha(opacity=90);cursor:pointer;overflow:hidden;}
-.day_row .week_event a{color:#000;}
-.day_row .week_event:hover{background:#E097B3;}
+.day_row .week_event{background:#b2b8da;float:left;position:absolute;height:20px;color:#000;padding:4px;border-left:4px solid #6a729b;border-top: 1px solid #6a729b;opacity:0.90;filter:alpha(opacity=90);cursor:pointer;overflow:hidden;}
+/*.day_row .week_event a{color:#000;}*/
+/*.day_row .week_event:hover{background:#E097B3;}*/
 .day_row #click_hour{height:57px;width:55px;border-right:1px solid #cfe6ec;padding:17px 1px 0px 18px;float:left;}
 .day_row #click_hour a{color:#000;}
 .day_row #click_hour:hover{background:#C7F980;}
 
+.all_day_event {
+  background:#b2b8da;
+  height: 19px;
+  color:#000;
+  padding:4px;
+  border-left:4px solid #6a729b;
+  border-top: 1px solid #6a729b;
+  opacity:0.90;
+  filter:alpha(opacity=90);
+  cursor:pointer;
+  overflow:hidden;
+  font-size: 12px;
+}
+
 /* 24-hour calendar view */
 .full_day_row{width:1800px;height:75px;position:relative;border-top:1px solid #ccc;}
-.full_day_row .week_event{background:#CD8AA4;float:left;position:absolute;height:20px;color:#000;padding:4px;border-left:4px solid #5A484F;border-top: 1px solid #5A484F;opacity:0.90;filter:alpha(opacity=90);cursor:pointer;overflow:hidden;}
-.full_day_row .week_event a{color:#000;}
-.full_day_row .week_event:hover{background:#E097B3;}
+.full_day_row .week_event{background:#b2b8da;float:left;position:absolute;height:20px;color:#000;padding:4px;border-left:4px solid #6a729b;border-top: 1px solid #6a729b;opacity:0.90;filter:alpha(opacity=90);cursor:pointer;overflow:hidden;}
 .full_header_row{width:1800px;height:54px;background:#A8CFDA;margin-bottom:1px;}
-.full_grid{background-color:#FFEDCA;background-image:url(../images/grid.png);width:1800px;}
+.full_grid{background-color:#d4e6ec;background-image:url(../images/grid.png);width:1800px;}
 .full_day_row #click_hour{height:57px;width:55px;border-right:1px solid #cfe6ec;padding:17px 1px 0px 18px;float:left;}
 .full_day_row #click_hour a{color:#000;}
 .full_day_row #click_hour:hover{background:#C7F980;}
