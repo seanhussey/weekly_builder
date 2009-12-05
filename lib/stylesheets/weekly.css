@@ -6,7 +6,7 @@
 #grid{background-color:#FFEDCA;background-image:url(../images/grid.png);background-attachment:inherit;width:1125px;}
 
 /* boxes */
-#header_row{width:1125px;height:54px;background:#A8CFDA;margin-bottom:1px;}
+#header_row {width:1125px;height:54px;background:#A8CFDA;margin-bottom:1px;}
 #header_box {
   height: 36px;
   width: 55px;
@@ -20,6 +20,7 @@
 #hour{height:50px;width:55px;padding:25px 0px 0px 20px;float:left;}
 #day{height:57px;border-right:1px solid #8F8F8F;border-top:1px solid #ccc;padding:0px;}
 .day-label {
+  font-size: 14px;
   padding: 10px;
 }
 #placeholder {
