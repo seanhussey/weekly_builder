@@ -58,9 +58,12 @@ class WeeklyCalendar::Builder
                 :class => "all_day_event",
               }
               concat(tag("div", div_options, true))
-                all_day = true
-                truncate = truncate_width(width(event.starts_at,event.ends_at))
-                yield(event, truncate, all_day)
+                # Prevents text from wrapping.
+                concat(tag("div", {:style => "width:1500px;"}, true))
+                  all_day = true
+                  truncate = truncate_width(width(event.starts_at,event.ends_at))
+                  yield(event, truncate, all_day)
+                concat("</div>")
               concat("</div>")
             end
             
@@ -90,9 +93,12 @@ class WeeklyCalendar::Builder
               div_options.merge!({:onclick => "location.href='/tasks/#{event.task.id}';"})
             end
             concat(tag("div", div_options, true))
-              all_day = false
-              truncate = truncate_width(width(event.starts_at,event.ends_at))
-              yield(event, truncate, all_day)
+              # Prevents text from wrapping on short events.
+              concat(tag("div", {:style => "width:1500px;"}, true))
+                all_day = false
+                truncate = truncate_width(width(event.starts_at,event.ends_at))
+                yield(event, truncate, all_day)
+              concat("</div>")
             concat("</div>")
           end
           concat("</div>")
