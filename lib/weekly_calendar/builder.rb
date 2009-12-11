@@ -14,7 +14,7 @@ class WeeklyCalendar::Builder
       (@start_date..@end_date).each_with_index do |day, index| 
         days_events = events_in_day(day)
         height = row_height(day)
-        concat(tag("div", {:id => "day_#{index}", :class => "day", :style => "height: #{height}px;"}, true))
+        concat(tag("div", {:id => "day_#{index}", :class => "day#{' today' if day == Date.today}", :style => "height: #{height}px;"}, true))
           concat(tag("div", {:class => "day-label"}, true))
             concat(content_tag("b", day.strftime('%a')))
             concat(tag("br"))
@@ -50,7 +50,7 @@ class WeeklyCalendar::Builder
         
         all_day_events = all_day_events_in_day(day)
         height = row_height(day)
-        concat(tag("div", {:id => "days_tasks_#{index}", :class => "days_tasks", :style => "height: #{height}px;"}, true))
+        concat(tag("div", {:id => "days_tasks_#{index}", :class => "days_tasks#{' today' if day == Date.today}", :style => "height: #{height}px;"}, true))
             
             all_day_events.each_with_index do |event, i|
               div_options = {
@@ -82,7 +82,7 @@ class WeeklyCalendar::Builder
         (@start_date..@end_date).each_with_index do |day, index|  
           days_events = events_in_day(day)
           height = row_height(day)
-          concat(tag("div", {:id => "#{day_row}_#{index}", :class => day_row, :style => "height: #{height}px;"}, true))
+          concat(tag("div", {:id => "#{day_row}_#{index}", :class => "#{day_row}", :style => "height: #{height}px;"}, true))
           days_events.each_with_index do |event, i|
             div_options = {
               :id => "week_event_#{day.strftime('%j').to_s}_#{i}",

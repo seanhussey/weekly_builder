@@ -105,6 +105,17 @@ class WeeklyCalendarTest < ActiveSupport::TestCase
     assert_dom_equal expected, output_buffer
   end
   
+  should "generate a weekly calendar without tasks that indicates today's date" do
+    self.output_buffer = ''
+    weekly_calendar(@no_tasks, :date => Date.today, :include_24_hours => false) do |w|
+      w.week(:business_hours => true, :clickable_hours => false) do |time_slot,truncate| 
+        "Test"
+      end
+    end            
+    assert output_buffer.include?("<div class=\"day today\" "), "The output should have a div with a class for today."
+    assert output_buffer.include?("<div class=\"days_tasks today\" "), "The output should have a div with a class for today."
+  end
+  
   should "generate a weekly business day calendar without tasks" do
     self.output_buffer = ''
     weekly_calendar(@no_tasks, :date => Date.civil(2008, 12, 26), :include_24_hours => false) do |w|
