@@ -10,15 +10,15 @@ class WeeklyCalendar::Builder
   
   def days
     concat(tag("div", {:id => "days", :class => "days"}, true))
-      concat(content_tag("div", "Weekly View", :id => "placeholder", :class => "placeholder"))
+      concat(content_tag("div", "Week", :id => "placeholder", :class => "placeholder"))
       (@start_date..@end_date).each_with_index do |day, index| 
         days_events = events_in_day(day)
         height = row_height(day)
         concat(tag("div", {:id => "day_#{index}", :class => "day", :style => "height: #{height}px;"}, true))
           concat(tag("div", {:class => "day-label"}, true))
-            concat(content_tag("b", day.strftime('%A')))
+            concat(content_tag("b", day.strftime('%a')))
             concat(tag("br"))
-            concat(day.strftime('%B %d'))
+            concat(day.strftime('%m/%d'))
           concat("</div>")
         concat("</div>")
       end
