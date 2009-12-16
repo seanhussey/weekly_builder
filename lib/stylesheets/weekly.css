@@ -106,6 +106,8 @@
 .day_row #click_hour:hover{background:#C7F980;}
 
 .all_day_events .all_day_event {
+  position: static;
+  float: none;
   background:#a9bbbb;
   height: 19px;
   color:#000;
