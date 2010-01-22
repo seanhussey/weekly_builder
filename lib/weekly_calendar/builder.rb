@@ -9,7 +9,7 @@ class WeeklyCalendar::Builder
   def days      
     concat(tag("div", :id => "days"))
       concat(content_tag("div", "Weekly View", :id => "placeholder"))
-      for day in @start_date..@end_date        
+      (@start_date..@end_date).to_a.each do |day|
         concat(tag("div", :id => "day"))
         concat(content_tag("b", day.strftime('%A')))
         concat(tag("br"))
@@ -39,16 +39,16 @@ class WeeklyCalendar::Builder
     
     concat(tag("div", :id => "hours"))
       concat(tag("div", :id => header_row))
-        for hour in hours
+        hours.each do |hour|
           header_box = "<b>#{hour}</b>"
           concat(content_tag("div", header_box, :id => "header_box"))
         end
       concat("</div>")
       
       concat(tag("div", :id => grid))
-        for day in @start_date..@end_date 
+        (@start_date..@end_date).to_a.each do |day|
           concat(tag("div", :id => day_row))
-          for event in @objects
+          @objects.each do |event|
             if event.starts_at.strftime('%j').to_s == day.strftime('%j').to_s 
              if event.starts_at.strftime('%H').to_i >= start_hour and event.ends_at.strftime('%H').to_i <= end_hour
                 concat(tag("div", :id => "week_event", :style =>"left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;", :onclick => "location.href='/events/#{event.id}';"))
