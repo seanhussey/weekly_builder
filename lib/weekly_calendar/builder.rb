@@ -55,7 +55,8 @@ class WeeklyCalendar::Builder
             all_day_events.each_with_index do |event, i|
               div_options = {
                 :id => "all_day_event_#{day.strftime('%j').to_s}_#{i}",
-                :class => "week_event all_day_event",
+                :class => "week_event all_day_event task",
+                :style => "#{event.color_style}"
               }
               concat(tag("div", div_options, true))
                 # Prevents text from wrapping.
@@ -86,11 +87,12 @@ class WeeklyCalendar::Builder
           days_events.each_with_index do |event, i|
             div_options = {
               :id => "week_event_#{day.strftime('%j').to_s}_#{i}",
-              :class => "week_event",
-              :style =>"top: #{i * @event_height}px;left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px;"
+              :class => "week_event task",
+              :hours => "#{event.starts_at.strftime("%H")}",
+              :style =>"top: #{i * @event_height}px;left:#{left(event.starts_at,options[:business_hours])}px;width:#{width(event.starts_at,event.ends_at)}px; #{event.color_style}"
             }
             if options[:clickable_hours] == true
-              div_options.merge!({:onclick => "location.href='/tasks/#{event.task.id}';"})
+              div_options.merge!({:onclick => "location.href='/tasks/#{event.id}';"})
             end
             concat(tag("div", div_options, true))
               # Prevents text from wrapping on short events.
@@ -128,6 +130,12 @@ class WeeklyCalendar::Builder
       #example 3:30 - 5:30
       start_hours = starts_at.strftime('%H').to_i * 60 # 3 * 60 = 180
       start_minutes = starts_at.strftime('%M').to_i + start_hours # 30 + 180 = 210
+      #determin if the event ends on a date later than the end of day.
+      start_date = starts_at.to_date
+      end_date = ends_at.to_date
+      if end_date - start_date > 0
+        ends_at = starts_at.end_of_day
+      end
       end_hours = ends_at.strftime('%H').to_i * 60 # 5 * 60 = 300
       end_minutes = ends_at.strftime('%M').to_i + end_hours # 30 + 300 = 330
       difference =  (end_minutes.to_i - start_minutes.to_i) * 1.25 # (330 - 180) = 150 * 1.25 = 187.5
