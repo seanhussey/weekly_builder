@@ -1,5 +1,14 @@
-ENV['RAILS_ENV'] = 'test'
-ENV['RAILS_ROOT'] ||= File.dirname(__FILE__) + '/../../../..'
-
 require 'test/unit'
-require File.expand_path(File.join(ENV['RAILS_ROOT'], 'config/environment.rb'))
+require 'rubygems'
+require 'active_support'
+require 'active_support/test_case'
+require 'action_pack'
+require 'action_controller'
+require 'action_view'
+require 'action_controller/test_process'
+require "shoulda"
+require "mocha"
+
+require '../lib/weekly_calendar'
+
+require(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'weekly_calendar/builder')))
